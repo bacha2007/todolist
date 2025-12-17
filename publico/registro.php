@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $hash = password_hash($password, PASSWORD_DEFAULT);
             $stmt = $pdo->prepare('INSERT INTO usuarios (nombre, email, password) VALUES (?, ?, ?)');
             $stmt->execute([$nombre, $email, $hash]);
-            header('Location: login.php?registered=1');
+            header('Location: sesion.php?registered=1');
             exit;
         }
     }
