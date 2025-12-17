@@ -1,166 +1,151 @@
-Proyecto: Gestor de Tareas en PHP
+To-Do List – PHP + MySQL (PROYECTO DE SANTIAGO,BAUTISTA,LOPEZ)
+Descripción:
+Este proyecto es una aplicación To-Do List desarrollada en PHP con MySQL.
+Permite a los usuarios registrarse, iniciar sesión y gestionar sus propias tareas (crear, completar y eliminar).
 
-Este proyecto es una aplicación web de gestión de tareas desarrollada en PHP + MySQL, con sistema de registro, login, sesiones y CRUD de tareas por usuario
+Cada usuario solo puede ver y modificar sus propias tareas.
 
-Objetivo del Proyecto
-cual es realmente la finalidad?
-Permitir que cada usuario:
-* Se registre e inicie sesión
-* Cree tareas propias
-* Marque tareas como completadas
-* Elimine tareas
-* Visualice solo sus propias tareas
-* Cierre sesión de forma segura
+LO QUE USE PARA ESTE PROYECTO
 
----
+PHP
 
-Estructura del Proyecto
+MySQL
 
-tu_proyecto/
-│
-├── auth/
-│   ├── registro.php        # Registro de usuarios
-│   ├── login.php           # Inicio de sesión
-│   ├── logout.php          # Cierre de sesión
-│
-├── panel/
-│   ├── dashboard.php       # Panel principal del usuario
-│   ├── crear_tarea.php     # Crear nueva tarea
-│   ├── marcar_completada.php # Cambiar estado de tarea
-│   ├── eliminar_tarea.php  # Eliminar tarea
+PDO
+
+HTML / CSS
+
+Bootstrap 5
+
+XAMPP
+
+ESTRUCTURA DEL PROYECTO
+recuperatorio-leo/
 │
 ├── config/
-│   └── db.php              # Conexión PDO a la base de datos
+│   └── db.php                # conexión a la base de datos
 │
 ├── includes/
-│   ├── header.php          # Cabecera HTML
-│   └── footer.php          # Pie HTML
+│   ├── header.php            # header HTML + bootstrap
+│   ├── footer.php            # cierre del HTML
+│   └── navbar.php            # barra de navegación
 │
-└── README.md               # Documentación del proyecto
+├── publico/
+│   ├── index.php             # redirección inicial
+│   ├── sesion.php            # login
+│   ├── registro.php          # registro de usuarios
+│   ├── dashboard.php         # listado de tareas
+│   ├── crear_tarea.php       # crear nueva tarea
+│   ├── eliminar_tarea.php    # elimina tarea
+│   ├── marcar_completada.php # marca tarea como completada
+│   └── logout.php            # cerrar sesión
+│
+├── sql/
+│   └── create_tables.sql     # script de la base de datos
+│
+└── assets/
+    └── style.css             # estilos propios
 
-Base de Datos (MySQL)
+//BASE DE DATOS
 
-Tabla: `usuarios`
+El proyecto usa una base llamada:
 
-| Campo     | Tipo           | Descripción               |
-| --------- | -------------- | ------------------------- |
-| id        | INT PK AI      | Identificador del usuario |
-| nombre    | VARCHAR        | Nombre del usuario        |
-| email     | VARCHAR UNIQUE | Email de acceso           |
-| password  | VARCHAR        | Contraseña en hash        |
-| creado_at | TIMESTAMP      | Fecha de creación         |
+todolist
 
----
-Tabla: `tareas`
+Tabla usuarios
 
-| Campo      | Tipo      | Descripción            |
-| ---------- | --------- | ---------------------- |
-| id         | INT PK AI | ID de la tarea         |
-| usuario_id | INT FK    | Usuario dueño          |
-| titulo     | VARCHAR   | Texto de la tarea      |
-| estado     | ENUM      | pendiente / completada |
-| creado_at  | TIMESTAMP | Fecha                  |
+Guarda los datos de los usuarios
 
----
-DER (Diagrama Entidad-Relación)
+El email es único
 
-```
-USUARIOS (1) ──────── (N) TAREAS
-   id ----------------- usuario_id
-```
+La contraseña se guarda encriptada
 
-* Un usuario puede tener muchas tareas
-* Una tarea pertenece a un solo usuario
+Tabla tareas
 
----
+Cada tarea pertenece a un usuario
 
-Flujo de Autenticación
+Tiene estado pendiente o completada
 
-1Registro → `registro.php`
+Se elimina automáticamente si se borra el usuario
 
-* Valida campos
-* Hashea contraseña
-* Inserta usuario
-* Redirige a login
+//SISTEMAS DE USUARIOS
 
-2Login → `login.php`
+Registro con validaciones básicas
 
-* Verifica credenciales
-* Inicia sesión
-* Guarda datos en `$_SESSION`
-* Redirige a dashboard
+Login con contraseña encriptada (password_hash)
 
-3 Protección
+Manejo de sesión con $_SESSION
 
-* Archivos privados verifican:
+Protección de rutas (si no está logueado, no entra)
 
-```php
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit;
-}
-```
+//EL FLUJO DE LA APP
 
-4️ Logout → `logout.php`
+El usuario entra al sitio
 
-* Destruye sesión
-* Redirige a login
+Si no está logueado → va al login
 
----
+Puede registrarse si no tiene cuenta
 
-Dashboard
+Inicia sesión
 
-Funciones:
+Accede al dashboard
 
-* Saludo al usuario
-* Listado de tareas
-* Filtros por estado
-* Acciones CRUD
+Puede:
 
-Filtros:
+crear tareas
 
-```php
-?filter=todas
-?filter=pendientes
-?filter=completadas
-```
+marcarlas como completadas
 
----
+eliminarlas
 
-Seguridad Implementada
+Puede cerrar sesión
 
-* Contraseñas con `password_hash()`
-* Verificación con `password_verify()`
-* Sesiones PHP
-* Protección por usuario en consultas SQL
-* Uso de `htmlspecialchars()` en salidas
-* PDO con prepared statements
+//FUNCIONES PRINCIPALES
 
----
+Registro de usuarios
 
-Errores que se corrigieron (Aprendizaje)
+Inicio de sesión
 
-* Headers enviados antes de `header()`
-* `session_start()` mal ubicado
-* Errores de sintaxis (`$stmt->execute`)
-* Rutas relativas incorrectas
-* Falta de control por usuario en DELETE
+Crear tareas
 
----
- Posibles Mejoras Futuras
+Listar tareas
 
-* Edición de tareas
-* Roles de usuario
-* Validaciones avanzadas
+Filtrar tareas
 
----
-Estado del Proyecto
+Completar tareas
 
- Funcional
- Seguro
- Escalable
- Documentado
+Eliminar tareas
 
----
-hecho por :santiago,bautista,lopez
-Stack: PHP 8+, MySQL, PDO, Bootstrap
+Cerrar sesión
+
+//SEGURIDAD
+
+Uso de PDO con prepared statements
+
+Contraseñas encriptadas
+
+Verificación de sesión en cada página
+
+Cada usuario ve solo sus datos
+
+//INSTALACION
+a la hora de instalar es muy breve,solo necesitamos;
+tener instalado xampp
+apache y mysql activos
+un navegador web
+
+una vez eso hecho,Abrir phpMyAdmin y crear una base de datos llamada:
+todolist
+
+importamos el archivo:sql/create_tables.sql
+y verificamos la conexion en db.php
+/CONCLUSIONES
+
+Este proyecto fue realizado con fines para practicar:
+PHP
+sesiones
+base de datos
+CRUD
+organización de archivos
+tambien:
+a la hora de implementarlo,pude tener un aprendizaje sobre lo que es php y su forma de programar,al no tener algo que me indique cual es el error,tuve que buscar la forma de solucionar las cosas,reforzar mi analisis,asesorarme de manera externa,entre otras cosas que elevo mi conocimiento.
